@@ -10,6 +10,13 @@ services:
             - ./:/var/www/
         networks:
             - dev
+        depends_on:
+            - db
+        environment:
+            MYSQL_HOST: db
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+            MYSQL_DATABASE: my_database
 
     nginx:
         build:
@@ -21,8 +28,24 @@ services:
         networks:
             - dev
 
+    db:
+        image: mysql:latest
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+            MYSQL_DATABASE: my_database
+        volumes:
+            - mysql_data:/var/lib/mysql
+        networks:
+            - dev
+
 networks:
     dev:
+
+volumes:
+    mysql_data:
 
 #volumes:
 #    db-data:
@@ -50,3 +73,4 @@ networks:
     #            PMA_HOST: db
     #        networks:
     #            - dev
+
